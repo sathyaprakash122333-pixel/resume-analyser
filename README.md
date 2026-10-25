@@ -1,114 +1,65 @@
-# ResumeIQ — AI-Powered Resume Analyzer & Career Progress Tracker
+# ResumeIQ — AI-Powered Resume Analyzer
 
-ResumeIQ is an AI-powered resume analysis and career tracking platform. This repository contains the Phase 1 initialization: the React/Vite frontend (reproducing the reference dark UI design with Firebase Google Authentication) and the decoupled FastAPI backend (providing health check services, CORS middleware, and API structure).
+ResumeIQ is an AI-powered resume analysis application designed to help users evaluate their resumes against their career goals. It provides resume feedback and insights to help users identify strengths and areas for improvement.
 
----
+## Features
 
-## 1. Architecture Overview
+- **Google Authentication:** Sign in using Firebase Authentication.
+- **Resume Upload:** Upload a resume for analysis.
+- **AI-Powered Analysis:** Analyze resume content using Google's Gemini API.
+- **Resume Scoring:** Evaluate resume quality across relevant criteria.
+- **Career Targets:** Set a target job role, company, or career objective.
+- **Score History:** Track previous resume analysis results.
+- **Database Integration:** Store user profiles, career targets, and analysis history in Supabase.
 
-```
-resume-analyser/
-├── frontend/                     # React (Vite) + Tailwind CSS + Firebase Auth
-│   ├── public/                   # Static assets
-│   ├── src/
-│   │   ├── assets/               # Image/icon assets
-│   │   ├── components/           # UI components (Header, Sidebar, ScoreGauge, etc.)
-│   │   ├── pages/
-│   │   │   ├── Login.jsx         # Google Sign-in Page matching reference design
-│   │   │   ├── Dashboard.jsx     # Longitudinal Career Insights Dashboard
-│   │   │   ├── AnalyzeResume.jsx # Drag-drop resume PDF upload & target role analysis form
-│   │   │   ├── AnalysisSummary.jsx # Comprehensive results & scoring breakdown report
-│   │   │   └── Profile.jsx       # Firebase authenticated account profile & display name editor
-│   │   ├── services/
-│   │   │   ├── firebase.js       # Firebase Client SDK initialization & Google Auth
-│   │   │   └── api.js            # FastAPI integration client
-│   │   ├── App.jsx               # Protected routing & auth state listener
-│   │   ├── main.jsx              # React DOM entry point
-│   │   └── index.css             # Tailwind CSS & theme tokens
-│   ├── .env.example              # Frontend environment template
-│   ├── .env.local                # Local environment config (ignored by git)
-│   ├── .gitignore                # Frontend git ignore
-│   ├── package.json              # NPM dependencies & scripts
-│   └── vite.config.js            # Vite configuration with Tailwind CSS plugin
-├── backend/                      # Python FastAPI Application
+## Tech Stack
+
+| Component | Technology |
+|---|---|
+| Frontend | React, Vite |
+| Backend | Python, FastAPI |
+| Authentication | Firebase Authentication |
+| Database | Supabase PostgreSQL |
+| AI Analysis | Google Gemini API |
+| API Communication | REST API |
+
+## Project Structure
+
+```text
+resumeanalyser/
+├── backend/
 │   ├── app/
-│   │   ├── __init__.py           # App package
-│   │   ├── main.py               # FastAPI application & CORS configuration
 │   │   ├── core/
-│   │   │   ├── __init__.py       # Core package
-│   │   │   └── config.py         # Pydantic Settings & environment variables
-│   │   ├── api/
-│   │   │   ├── __init__.py       # API package
-│   │   │   └── routes/
-│   │   │       ├── __init__.py   # Routes package
-│   │   │       └── health.py     # GET /api/v1/health endpoint
-│   │   └── schemas/
-│   │       └── __init__.py       # Pydantic schemas package
-│   ├── tests/
-│   │   ├── __init__.py           # Test suite package
-│   │   └── test_health.py        # Pytest test cases for health & root routes
-│   ├── .env.example              # Backend environment template
-│   ├── .gitignore                # Backend git ignore
-│   └── requirements.txt          # Python dependencies
-├── .gitignore                    # Root repository git ignore
-└── README.md                     # Project documentation & runbook
+│   │   └── main.py
+│   ├── .env
+│   └── requirements.txt
+├── frontend/
+│   ├── src/
+│   ├── public/
+│   └── package.json
+├── .gitignore
+├── README.md
+└── dev.sh
 ```
 
----
+## Prerequisites
 
-## 2. Prerequisites
+- Python 3.10 or later
+- Node.js and npm
+- A Firebase project with Google sign-in configured
+- A Supabase project
+- A Google Gemini API key
 
-- **Node.js**: v18+ (tested on v24.21.0)
-- **npm**: v9+ (tested on v11.19.0)
-- **Python**: 3.10+ (tested on 3.14.4)
-- A **Firebase Project** with Google Authentication enabled in the Firebase Console.
+## Setup and Installation
 
----
-
-## 3. Frontend Setup & Run Instructions
-
-### A. Environment Configuration
-The frontend reads Firebase web configuration from `frontend/.env.local`. Create or verify `frontend/.env.local`:
-
-```dotenv
-VITE_FIREBASE_API_KEY=your_firebase_web_api_key_here
-VITE_FIREBASE_AUTH_DOMAIN=resume-analyser-e4441.firebaseapp.com
-VITE_FIREBASE_PROJECT_ID=resume-analyser-e4441
-VITE_FIREBASE_STORAGE_BUCKET=resume-analyser-e4441.firebasestorage.app
-VITE_FIREBASE_MESSAGING_SENDER_ID=538386306246
-VITE_FIREBASE_APP_ID=1:538386306246:web:add41bb1561bd4c81bb3c7
-```
-
-> **Note on Firebase Google Authentication:**
-> To complete the Google Sign-In setup:
-> 1. Go to the [Firebase Console](https://console.firebase.google.com/) > Select **resume-analyser-e4441**.
-> 2. Navigate to **Build > Authentication > Sign-in method**.
-> 3. Enable **Google** as a sign-in provider and add a support email.
-> 4. Ensure `localhost` is listed under **Authorized domains** (Authentication > Settings > Authorized domains).
-> 5. Obtain the Web API Key from **Project Settings > General > Web API Key** and paste it into `VITE_FIREBASE_API_KEY` in `frontend/.env.local`.
-
-### B. Run Development Server
+### 1. Clone the repository
 
 ```bash
-cd frontend
-npm install
-npm run dev
+git clone https://github.com/sathyaprakash122333-pixel/resume-analyser.git
+cd resume-analyser
 ```
 
-The application will be accessible at: `http://localhost:5173/`
-
-### C. Run Production Build
-
-```bash
-cd frontend
-npm run build
-```
-
----
-
-## 4. Backend Setup & Run Instructions
-
-### A. Environment Setup & Dependency Installation
+### 2. Configure the backend
 
 ```bash
 cd backend
@@ -117,44 +68,56 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### B. Run FastAPI Server
+Create a `backend/.env` file and configure the environment variables required by the backend, including the Gemini API key and Supabase connection settings. Configure Firebase Admin credentials according to the backend configuration.
+
+**Never commit API keys, service-account JSON files, or other secrets.**
+
+### 3. Configure the frontend
 
 ```bash
+cd ../frontend
+npm install
+```
+
+Create `frontend/.env.local` with:
+
+```env
+VITE_API_BASE_URL=http://127.0.0.1:8000
+```
+
+Configure the Firebase client settings using the variable names expected by the frontend code.
+
+### 4. Run the application
+
+Open a terminal for the backend:
+
+```bash
+cd ~/Projects/resumeanalyser/backend
+source .venv/bin/activate
 uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
 ```
 
-### C. Access Documentation & Health Checks
-
-- **Root API Info**: [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
-- **Health Check Endpoint**: [http://127.0.0.1:8000/api/v1/health](http://127.0.0.1:8000/api/v1/health)
-- **Interactive Swagger UI**: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
-- **ReDoc Documentation**: [http://127.0.0.1:8000/redoc](http://127.0.0.1:8000/redoc)
-
-### D. Run Automated Tests
+Open another terminal for the frontend:
 
 ```bash
-cd backend
-pytest tests/
+cd ~/Projects/resumeanalyser/frontend
+npm run dev
 ```
 
-Expected output:
-```text
-tests/test_health.py ..                                          [100%]
-============================== 2 passed in 0.17s ==============================
-```
+Open the frontend URL printed by Vite in your browser. The FastAPI documentation is available at:
 
----
+http://127.0.0.1:8000/docs
 
-## 5. Visual Fidelity & Reference Implementation
+## Database
 
-The UI precisely reproduces the dark theme (`#000000` background) reference design:
-- **Login (`/login`)**: Gradient document icon, hero value propositions ("AI-powered feedback", "Find skill gaps", "Track your progress"), and Google sign-in card with terms.
-- **Dashboard (`/dashboard`)**:
-  - Radial score gauge displaying latest score (`78/100`) and green upward delta (`↑ +8 from previous`).
-  - Total analyses count card (`6 Completed reviews`).
-  - Current target indicator card (`Python Backend Developer`).
-  - Interactive SVG score progression line chart (`Oct 1 – Oct 24`).
-  - Recent analyses table with score status badges.
-  - Score breakdown category bars (Skills Match, Experience & Projects, Content Quality, Structure & Readability, Completeness).
-  - Prominent "Analyze Resume" call to action.
-  - Mode toggle allowing preview of both the **Reference Mockup** and genuine **Empty State** for fresh accounts.
+ResumeIQ uses Supabase PostgreSQL to manage user profiles, career targets, and resume analysis history. Database credentials and configuration must be supplied through environment variables.
+
+## Security
+
+- Keep API keys and private credentials out of Git.
+- Do not commit `.env` files or Firebase Admin service-account credentials.
+- Use Firebase Authentication to authenticate users and validate tokens on the backend.
+
+## Project Status
+
+ResumeIQ is under development. Features and implementation details may evolve as the project progresses.
